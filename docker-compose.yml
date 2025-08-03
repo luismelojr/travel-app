@@ -2,15 +2,18 @@ services:
   app:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+      target: development
     container_name: travel-app
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
       - ./backend:/var/www/html
       - ./backend/storage:/var/www/html/storage
+      - ./backend/vendor:/var/www/html/vendor
     ports:
       - "8000:8000"
+      - "9003:9003" # Xdebug port
     networks:
       - travel-network
     depends_on:
@@ -20,6 +23,8 @@ services:
       - DB_HOST=mysql
       - REDIS_HOST=redis
       - MAIL_HOST=mailhog
+      - XDEBUG_MODE=coverage,debug
+      - XDEBUG_CONFIG=client_host=host.docker.internal
 
   mysql:
     image: mysql:8.0

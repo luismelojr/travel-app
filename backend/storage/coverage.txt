@@ -1,0 +1,42 @@
+
+
+[1;37;40mCode Coverage Report:      [0m
+[1;37;40m  2025-08-03 20:12:06      [0m
+[1;37;40m                           [0m
+[1;37;40m Summary:                  [0m
+[30;42m  Classes: 93.75% (15/16)  [0m
+[30;42m  Methods: 98.41% (62/63)  [0m
+[30;42m  Lines:   99.62% (263/264)[0m
+
+App\Enums\UserRoleEnum
+  [30;42mMethods: 100.00% ( 3/ 3)[0m   [30;42mLines: 100.00% (  6/  6)[0m
+App\Exceptions\ApiException
+  [30;42mMethods: 100.00% (11/11)[0m   [30;42mLines: 100.00% ( 19/ 19)[0m
+App\Exceptions\ApiValidationException
+  [30;42mMethods: 100.00% ( 3/ 3)[0m   [30;42mLines: 100.00% (  4/  4)[0m
+App\Exceptions\AuthException
+  [30;42mMethods: 100.00% ( 9/ 9)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
+App\Exceptions\ResourceNotFoundException
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% (  2/  2)[0m
+App\Helpers\ResponseHelper
+  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 42/ 42)[0m
+App\Http\Controllers\Api\v1\AuthController
+  [30;42mMethods: 100.00% ( 6/ 6)[0m   [30;42mLines: 100.00% ( 21/ 21)[0m
+App\Http\Middleware\JwtAuthMiddleware
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 10/ 10)[0m
+App\Http\Requests\Auth\LoginRequest
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
+App\Http\Requests\Auth\RegisterRequest
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 21/ 21)[0m
+App\Http\Resources\AuthResource
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  6/  6)[0m
+App\Http\Resources\UserResource
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 10/ 10)[0m
+App\Models\User
+  [30;42mMethods: 100.00% ( 3/ 3)[0m   [30;42mLines: 100.00% (  7/  7)[0m
+App\Providers\AppServiceProvider
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% (  2/  2)[0m
+App\Rules\PasswordRule
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
+App\Services\AuthService
+  [30;43mMethods:  80.00% ( 4/ 5)[0m   [30;42mLines:  98.55% ( 68/ 69)[0m

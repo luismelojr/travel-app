@@ -19,6 +19,13 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Instalar extensões PHP
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
+# Instalar Xdebug para cobertura de testes
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
+# Copiar configuração customizada do Xdebug
+COPY docker/xdebug.ini /usr/local/etc/php/conf.d/99-xdebug.ini
+
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

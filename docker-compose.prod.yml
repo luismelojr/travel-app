@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+      target: production
+    container_name: travel-app-prod
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "8000:8000"
+    networks:
+      - travel-network
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+      - MAIL_HOST=mailhog
+      - APP_ENV=production
+
+  mysql:
+    image: mysql:8.0
+    container_name: travel-mysql-prod
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: travel_db
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mysql_data_prod:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - travel-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: travel-redis-prod
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    networks:
+      - travel-network
+
+volumes:
+  mysql_data_prod:
+
+networks:
+  travel-network:
+    driver: bridge

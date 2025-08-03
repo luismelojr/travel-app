@@ -136,14 +136,32 @@ class AuthService implements AuthServiceInterface
      * Remove o token do usuário da blacklist do JWT
      * 
      * @return void
-     * @throws AuthException Quando token é inválido
+     * @throws AuthException Quando token é inválido ou não fornecido
      */
     public function logout(): void
     {
         try {
+            // Ensure user is authenticated before attempting logout
+            $user = auth('api')->user();
+            if (!$user) {
+                throw AuthException::tokenNotProvided();
+            }
+            
+            // Invalidate the current token
             JWTAuth::invalidate(JWTAuth::getToken());
         } catch (JWTException $e) {
-            throw AuthException::invalidToken();
+            // Log the error but don't fail the logout completely
+            // In many cases, the token might already be expired or blacklisted
+            // The important thing is that the user is logged out from the client side
+            Log::warning('JWT token invalidation failed during logout', [
+                'error' => $e->getMessage(),
+                'user' => auth('api')->user()?->id
+            ]);
+            
+            // Only throw if we cannot get the user (token completely invalid)
+            if (!auth('api')->user()) {
+                throw AuthException::invalidToken();
+            }
         }
     }
 
