@@ -1,214 +1,276 @@
-# Travel App - Sistema de Gerenciamento de Pedidos de Viagem Corporativa
+# Travel API - Sistema de Gerenciamento de Pedidos de Viagem
 
-Sistema completo para gerenciar pedidos de viagem corporativa desenvolvido com Laravel 12, Docker e as melhores práticas de desenvolvimento.
+API REST completa para gerenciamento de pedidos de viagem corporativa desenvolvida com Laravel 12, autenticação JWT, documentação Swagger e cobertura de testes de 90%+.
+
+## 🚀 Features Principais
+
+- ✅ **Autenticação JWT** - Sistema completo de login/registro com tokens seguros
+- ✅ **CRUD Pedidos de Viagem** - Criar, listar, visualizar e gerenciar pedidos
+- ✅ **Sistema de Autorização** - Roles (admin/user) com permissões específicas
+- ✅ **Notificações por Email** - Notificação automática de status via filas
+- ✅ **Documentação Swagger** - API totalmente documentada
+- ✅ **Testes Completos** - 90%+ de cobertura com PHPUnit
+- ✅ **Rate Limiting** - Proteção contra spam e ataques
+- ✅ **Docker Ready** - Ambiente completo containerizado
 
 ## 🚀 Quick Start
 
 Execute um único comando para configurar todo o projeto:
 
 ```bash
-./setup.sh
+# Antes de executar, certifique-se de ter dado permissão de execução ao script
+# Para macOS/Linux:
+sudo chmod +x setup.sh restart.sh
+./setup.sh # Configura o ambiente Docker, instala dependências e cria o banco de dados
+./restart.sh # Reinicia o ambiente Docker podendo limpar os volumes e recriar o banco de dados
 ```
-
-O script irá:
-- ✅ Verificar dependências do sistema (Docker, Docker Compose)
-- ✅ Construir e subir todos os containers
-- ✅ Instalar Laravel 12 com `laravel new`
-- ✅ Configurar banco de dados MySQL
-- ✅ Instalar e configurar Redis para filas
-- ✅ Configurar Mailhog para testes de email
-- ✅ Instalar Swagger, Pest, Horizon
-- ✅ Executar migrations
-- ✅ Verificar se tudo está funcionando
 
 ## 📱 URLs Disponíveis
 
-| Serviço | URL | Descrição |
-|---------|-----|-----------|
-| **API** | http://localhost:8000 | API Laravel principal |
-| **Swagger** | http://localhost:8000/api/documentation | Documentação da API |
-| **Horizon** | http://localhost:8000/horizon | Dashboard de filas |
-| **Mailhog** | http://localhost:8025 | Interface de email para testes |
-| **Frontend** | http://localhost:3000 | Interface do usuário (placeholder) |
+| Serviço     | URL                                     | Descrição                      |
+| ----------- | --------------------------------------- | ------------------------------ |
+| **API**     | http://localhost:8000                   | API Laravel principal          |
+| **Swagger** | http://localhost:8000/api/documentation | Documentação interativa da API |
+| **Mailhog** | http://localhost:8025                   | Interface para testes de email |
 
 ## 🧱 Stack Tecnológica
 
 ### Backend
-- **Laravel 12** - Framework PHP moderno
-- **MySQL 8.0** - Banco de dados relacional
-- **Redis** - Cache e gerenciamento de filas
-- **Swagger (L5-Swagger)** - Documentação automática da API
-- **Pest** - Framework de testes moderno
-- **Laravel Horizon** - Dashboard para filas Redis
 
-### DevOps & Ferramentas
-- **Docker & Docker Compose** - Containerização
-- **Mailhog** - Servidor de email para desenvolvimento
-- **Supervisor** - Gerenciamento de processos
+- **Laravel 12** - Framework PHP com PHP 8.2+
+- **JWT Auth** - Autenticação via tokens JWT
+- **MySQL 8.0** - Banco de dados relacional
+- **Redis** - Cache e filas para jobs
+- **L5-Swagger** - Documentação automática OpenAPI 3.0
+- **PHPUnit** - Framework de testes com 90%+ cobertura
+- **Mailhog** - Servidor SMTP para desenvolvimento
+
+### DevOps
+
+- **Docker & Docker Compose** - Ambiente containerizado
+- **Xdebug** - Debug e cobertura de código
+- **Supervisor** - Gerenciamento de workers de fila
 
 ## 🏗️ Arquitetura
 
-O projeto segue os princípios de **Arquitetura Limpa**:
+O projeto segue padrões de **Clean Code** e **SOLID**:
 
 ```
 app/
-├── Http/
-│   ├── Controllers/     # Controladores da API
-│   ├── Requests/        # Validação de requests
-│   └── Resources/       # Transformação de dados (HATEOAS)
-├── Services/            # Regras de negócio
-├── Repositories/        # Acesso aos dados
-├── DTOs/               # Data Transfer Objects
+├── Contracts/           # Interfaces dos serviços
+├── Enums/              # Enums para status e roles
 ├── Exceptions/         # Exceções customizadas
-└── Models/             # Eloquent Models
+├── Helpers/            # Helpers para responses
+├── Http/
+│   ├── Controllers/    # Controllers da API v1
+│   ├── Middleware/     # JWT e outros middlewares
+│   ├── Requests/       # Form Requests com validação
+│   └── Resources/      # API Resources (transformação)
+├── Jobs/               # Jobs assíncronos (emails)
+├── Mail/               # Classes de email
+├── Models/             # Eloquent Models
+├── Policies/           # Authorization policies
+├── Rules/              # Custom validation rules
+└── Services/           # Lógica de negócio
 ```
+
+## 📝 Endpoints da API
+
+### Autenticação (`/api/v1/auth`)
+
+| Método | Endpoint    | Descrição               | Auth |
+| ------ | ----------- | ----------------------- | ---- |
+| `POST` | `/register` | Registrar novo usuário  | ❌   |
+| `POST` | `/login`    | Fazer login             | ❌   |
+| `POST` | `/refresh`  | Renovar token           | ✅   |
+| `POST` | `/logout`   | Fazer logout            | ✅   |
+| `GET`  | `/me`       | Dados do usuário logado | ✅   |
+
+### Pedidos de Viagem (`/api/v1/travel-requests`)
+
+| Método  | Endpoint       | Descrição                | Auth | Role                          |
+| ------- | -------------- | ------------------------ | ---- | ----------------------------- |
+| `POST`  | `/`            | Criar pedido             | ✅   | Qualquer                      |
+| `GET`   | `/`            | Listar pedidos           | ✅   | User: próprios / Admin: todos |
+| `GET`   | `/{id}`        | Buscar pedido específico | ✅   | User: próprios / Admin: todos |
+| `PATCH` | `/{id}/status` | Alterar status           | ✅   | Admin apenas                  |
+| `PATCH` | `/{id}/cancel` | Cancelar pedido          | ✅   | Owner ou Admin                |
+
+### Rate Limiting
+
+- **Auth endpoints**: 5 requests/minuto
+- **Demais endpoints**: 60 requests/minuto
+
+## 🧪 Testes
+
+Cobertura atual: **90%+** com PHPUnit
+
+```bash
+# Executar todos os testes
+docker-compose exec app php artisan test
+
+# Executar com cobertura HTML
+docker-compose exec app ./scripts/test-coverage.sh
+
+# Ver relatório de cobertura
+open backend/storage/coverage-html/index.html
+```
+
+### Categorias de Teste
+
+- **Unit Tests**: Models, Services, Enums, Exceptions, Helpers
+- **Feature Tests**: Controllers, Middleware, Requests
+- **Integration Tests**: Jobs, Mail, Policies
 
 ## 🛠️ Comandos Úteis
 
 ### Docker
+
 ```bash
-# Subir todos os containers
+# Subir ambiente
 docker-compose up -d
 
-# Parar containers
+# Parar ambiente
 docker-compose down
 
-# Acessar container da aplicação
+# Acessar container
 docker-compose exec app bash
 
-# Ver logs da aplicação
+# Ver logs
 docker-compose logs app -f
 ```
 
 ### Laravel
-```bash
-# Executar migrations
-docker-compose exec app php artisan migrate
 
-# Executar testes com Pest
-docker-compose exec app ./vendor/bin/pest
+```bash
+# Migrations
+docker-compose exec app php artisan migrate
 
 # Gerar documentação Swagger
 docker-compose exec app php artisan l5-swagger:generate
 
-# Monitorar filas com Horizon
-docker-compose exec app php artisan horizon
+# Executar filas (desenvolvimento)
+docker-compose exec app php artisan queue:work
+
+# Limpar caches
+docker-compose exec app php artisan optimize:clear
 ```
 
-## 🧪 Testes
-
-O projeto usa **Pest** como framework de testes:
-
-```bash
-# Executar todos os testes
-docker-compose exec app ./vendor/bin/pest
-
-# Executar testes com cobertura
-docker-compose exec app ./vendor/bin/pest --coverage
-
-# Executar testes específicos
-docker-compose exec app ./vendor/bin/pest tests/Feature/TravelRequestTest.php
-```
-
-## 📊 Monitoramento
-
-### Laravel Horizon
-- Dashboard: http://localhost:8000/horizon
-- Monitora filas Redis em tempo real
-- Estatísticas de processamento
-- Controle de workers
-
-### Logs
-```bash
-# Ver logs da aplicação
-docker-compose logs app
-
-# Ver logs do MySQL
-docker-compose logs mysql
-
-# Ver logs do Redis
-docker-compose logs redis
-```
-
-## 🔧 Configuração Avançada
+## 📊 Configuração do Ambiente
 
 ### Banco de Dados
-- **Host**: mysql (dentro do Docker)
+
+- **Host**: mysql (Docker) / localhost (local)
 - **Porta**: 3306
 - **Database**: travel_db
-- **Usuário**: travel_user
-- **Senha**: travel_password
+- **Root Password**: root_password
 
 ### Redis
-- **Host**: redis (dentro do Docker)
-- **Porta**: 6379
+
+- **Host**: redis (Docker) / localhost (local)
+- **Porta**: 6380 (externa) / 6379 (interna)
 
 ### Email (Mailhog)
+
 - **SMTP Host**: mailhog
 - **SMTP Port**: 1025
 - **Web Interface**: http://localhost:8025
 
-## 📝 Desenvolvimento
+### Variáveis de Ambiente
 
-### Adicionando Nova Feature
-1. Criar migration: `php artisan make:migration create_table_name`
-2. Criar model: `php artisan make:model ModelName`
-3. Criar controller: `php artisan make:controller ModelController`
-4. Criar testes: `./vendor/bin/pest --init` (já configurado)
-5. Documentar na API com Swagger
+```env
+# JWT
+JWT_SECRET=your-secret-key
+JWT_TTL=60
 
-### Padrões de Commit
-Seguimos **Conventional Commits**:
-- `feat:` nova funcionalidade
-- `fix:` correção de bug
-- `docs:` documentação
-- `test:` testes
-- `refactor:` refatoração
+# Database
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=travel_db
+
+# Redis
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+# Mail
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+```
+
+## 🔧 Funcionalidades Implementadas
+
+### Sistema de Autenticação
+
+- Registro de usuários com validação robusta
+- Login com credenciais email/senha
+- Tokens JWT com expiração configurável
+- Refresh de tokens
+- Middleware de autenticação customizado
+
+### Gerenciamento de Pedidos
+
+- Criação de pedidos com validação de datas
+- Listagem com filtros (status, destino, datas)
+- Visualização de pedidos individuais
+- Sistema de autorização baseado em roles
+- Cancelamento de pedidos com regras de negócio
+
+### Sistema de Notificações
+
+- Emails automáticos via filas Redis
+- Notificação de mudanças de status
+- Templates HTML responsivos
+- Processamento assíncrono via Jobs
+
+### Documentação e Testes
+
+- Swagger/OpenAPI 3.0 completo
+- Testes unitários e de integração
+- Cobertura de código com relatórios HTML
+- Factories e Seeders para desenvolvimento
 
 ## 🚨 Troubleshooting
 
-### Porta em uso
-Se a porta 8000 já estiver em uso:
+### Portas em Uso
+
 ```bash
-# Verificar processos na porta
+# Verificar portas ocupadas
 lsof -i :8000
+lsof -i :3306
 
-# Parar containers e tentar novamente
-docker-compose down
-./setup.sh
+# Parar e reiniciar
+docker-compose down && docker-compose up -d
 ```
 
-### Problemas de permissão
+### Problemas de Permissão
+
 ```bash
-# Corrigir permissões (Linux/WSL)
-sudo chown -R $USER:$USER .
+# Linux/WSL
+sudo chown -R $USER:$USER backend/storage backend/bootstrap/cache
+
+# Recriar containers
+docker-compose down -v
+docker-compose up -d --build
 ```
 
-### Reset completo
+### Reset Completo
+
 ```bash
-# Remover tudo e começar do zero
+# Limpar tudo
 docker-compose down -v
 docker system prune -f
 ./setup.sh
 ```
 
-## 📋 Requisitos do Sistema
+## 📋 Requisitos
 
 - **Docker** 20.10+
 - **Docker Compose** 2.0+
 - **Git**
-- **Composer** (opcional, usado pelo setup.sh se disponível)
-
-## 🎯 Próximos Passos
-
-1. ✅ Setup inicial completo
-2. 🔄 Implementar autenticação (JWT/Sanctum)
-3. 🔄 Criar CRUDs para pedidos de viagem
-4. 🔄 Sistema de aprovação workflow
-5. 🔄 Notificações via email/fila
-6. 🔄 Relatórios e dashboards
-7. 🔄 Testes de integração completos
+- **PHP 8.2+** (se executar fora do Docker)
 
 ---
 
-**Desenvolvido com ❤️ usando Laravel 12 e as melhores práticas de desenvolvimento**
+**API desenvolvida seguindo as melhores práticas de segurança, teste e documentação** 🚀
+**Desenvolvido por [Luis Henrique](https://www.linkedin.com/in/luis-henrique-da-silva-melo-junior-416579155/)** 🛠️
