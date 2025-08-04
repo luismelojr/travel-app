@@ -1,13 +1,15 @@
 
 
 [1;37;40mCode Coverage Report:      [0m
-[1;37;40m  2025-08-03 20:12:06      [0m
+[1;37;40m  2025-08-04 13:20:10      [0m
 [1;37;40m                           [0m
 [1;37;40m Summary:                  [0m
-[30;42m  Classes: 93.75% (15/16)  [0m
-[30;42m  Methods: 98.41% (62/63)  [0m
-[30;42m  Lines:   99.62% (263/264)[0m
+[30;43m  Classes: 80.77% (21/26)  [0m
+[30;42m  Methods: 95.58% (108/113)[0m
+[30;42m  Lines:   97.63% (535/548)[0m
 
+App\Enums\TravelRequestStatusEnum
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% (  8/  8)[0m
 App\Enums\UserRoleEnum
   [30;42mMethods: 100.00% ( 3/ 3)[0m   [30;42mLines: 100.00% (  6/  6)[0m
 App\Exceptions\ApiException
@@ -22,21 +24,39 @@ App\Helpers\ResponseHelper
   [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 42/ 42)[0m
 App\Http\Controllers\Api\v1\AuthController
   [30;42mMethods: 100.00% ( 6/ 6)[0m   [30;42mLines: 100.00% ( 21/ 21)[0m
+App\Http\Controllers\Api\v1\TravelRequestController
+  [30;42mMethods: 100.00% ( 6/ 6)[0m   [30;42mLines: 100.00% ( 41/ 41)[0m
 App\Http\Middleware\JwtAuthMiddleware
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 10/ 10)[0m
 App\Http\Requests\Auth\LoginRequest
   [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
 App\Http\Requests\Auth\RegisterRequest
   [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 21/ 21)[0m
+App\Http\Requests\TravelRequest\CreateTravelRequestRequest
+  [30;43mMethods:  75.00% ( 3/ 4)[0m   [30;43mLines:  88.89% ( 24/ 27)[0m
+App\Http\Requests\TravelRequest\UpdateStatusRequest
+  [30;43mMethods:  75.00% ( 3/ 4)[0m   [30;43mLines:  72.73% (  8/ 11)[0m
+App\Http\Requests\TravelRequest\UpdateTravelRequestRequest
+  [30;43mMethods:  75.00% ( 3/ 4)[0m   [30;43mLines:  86.96% ( 20/ 23)[0m
 App\Http\Resources\AuthResource
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  6/  6)[0m
+App\Http\Resources\TravelRequestResource
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 18/ 18)[0m
 App\Http\Resources\UserResource
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 10/ 10)[0m
+App\Models\TravelRequest
+  [30;42mMethods: 100.00% ( 8/ 8)[0m   [30;42mLines: 100.00% ( 20/ 20)[0m
 App\Models\User
   [30;42mMethods: 100.00% ( 3/ 3)[0m   [30;42mLines: 100.00% (  7/  7)[0m
+App\Policies\TravelRequestPolicy
+  [30;42mMethods: 100.00% (11/11)[0m   [30;42mLines: 100.00% ( 14/ 14)[0m
 App\Providers\AppServiceProvider
-  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% (  2/  2)[0m
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% (  3/  3)[0m
+App\Providers\AuthServiceProvider
+  [37;41mMethods:   0.00% ( 0/ 1)[0m   [30;43mLines:  70.00% (  7/ 10)[0m
 App\Rules\PasswordRule
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
 App\Services\AuthService
   [30;43mMethods:  80.00% ( 4/ 5)[0m   [30;42mLines:  98.55% ( 68/ 69)[0m
+App\Services\TravelRequestService
+  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% (111/111)[0m
