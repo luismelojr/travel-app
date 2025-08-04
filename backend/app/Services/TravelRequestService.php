@@ -8,6 +8,7 @@ use App\Enums\UserRoleEnum;
 use App\Exceptions\ApiValidationException;
 use App\Exceptions\ResourceNotFoundException;
 use App\Http\Resources\TravelRequestResource;
+use App\Jobs\SendTravelRequestNotification;
 use App\Models\TravelRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -144,9 +145,11 @@ class TravelRequestService implements TravelRequestServiceInterface
             throw new ResourceNotFoundException('Pedido de viagem não encontrado');
         }
 
+
         if (!Gate::allows('manage-travel-request-status')) {
             throw new ApiValidationException(['authorization' => ['Apenas administradores podem alterar status de pedidos']],'Apenas administradores podem alterar status de pedidos');
         }
+
 
         try {
             $newStatus = TravelRequestStatusEnum::from($status);
@@ -155,6 +158,7 @@ class TravelRequestService implements TravelRequestServiceInterface
         }
 
         $this->validateStatusTransition($travelRequest->status, $newStatus);
+
 
         $oldStatus = $travelRequest->status;
         $travelRequest->update(['status' => $newStatus]);
@@ -166,6 +170,11 @@ class TravelRequestService implements TravelRequestServiceInterface
             'updated_by' => auth('api')->id(),
             'user_role' => auth('api')->user()->role->value,
         ]);
+
+        // Disparar notificação apenas para aprovação ou cancelamento
+        if ($newStatus === TravelRequestStatusEnum::APPROVED || $newStatus === TravelRequestStatusEnum::CANCELLED) {
+            SendTravelRequestNotification::dispatch($travelRequest, $oldStatus);
+        }
 
         return new TravelRequestResource($travelRequest->load('user'));
     }
@@ -189,7 +198,7 @@ class TravelRequestService implements TravelRequestServiceInterface
             throw new ResourceNotFoundException('Pedido de viagem não encontrado');
         }
 
-        // Verificar se o usuário pode cancelar o pedido usando a nova política
+        // Verificar se o usuário pode cancelar o pedido usando a policy apropriada
         if (!Gate::allows('manage-travel-request-status', $travelRequest)) {
             throw new ApiValidationException(['authorization' => ['Você não tem permissão para cancelar este pedido']], 'Você não tem permissão para cancelar este pedido');
         }
@@ -215,6 +224,9 @@ class TravelRequestService implements TravelRequestServiceInterface
             'user_role' => auth('api')->user()->role->value,
             'original_requester' => $travelRequest->user_id,
         ]);
+
+        // Disparar notificação de cancelamento
+        SendTravelRequestNotification::dispatch($travelRequest, $oldStatus);
 
         return new TravelRequestResource($travelRequest->load('user'));
     }
@@ -272,6 +284,14 @@ class TravelRequestService implements TravelRequestServiceInterface
             TravelRequestStatusEnum::CANCELLED->value => [],
         ];
 
+        if ($currentStatus === TravelRequestStatusEnum::APPROVED && $newStatus !== TravelRequestStatusEnum::CANCELLED) {
+            throw new ApiValidationException([
+                'status' => [
+                    'Pedidos aprovados só podem ser cancelados, não podem ser reprovados ou alterados para outro status'
+                ],
+            ], 'Transição inválida: Pedido já aprovado');
+        }
+
         if (!in_array($newStatus->value, $allowedTransitions[$currentStatus->value])) {
             throw new ApiValidationException([
                 'status' => [
@@ -280,8 +300,12 @@ class TravelRequestService implements TravelRequestServiceInterface
                         $currentStatus->label(),
                         $newStatus->label()
                     )
-                ]
-            ]);
+                ],
+            ], sprintf(
+                'Transição de status inválida: "%s" para "%s"',
+                $currentStatus->label(),
+                $newStatus->label()
+            ));
         }
     }
 }

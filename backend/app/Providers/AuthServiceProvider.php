@@ -27,17 +27,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // Gate para administradores
         Gate::define('admin', function (User $user) {
-            return $user->role === UserRoleEnum::ADMIN;
+            return $user->role->value === UserRoleEnum::ADMIN->value;
         });
 
-        // Gate para gerenciar status de pedidos de viagem
         Gate::define('manage-travel-request-status', function (User $user) {
-            return $user->role === UserRoleEnum::ADMIN;
+            return $user->role->value === UserRoleEnum::ADMIN->value;
         });
 
-        // Gate para verificar se é dono do pedido
         Gate::define('own-travel-request', function (User $user, TravelRequest $travelRequest) {
             return $user->id === $travelRequest->user_id;
         });

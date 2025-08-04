@@ -1,12 +1,12 @@
 
 
 [1;37;40mCode Coverage Report:      [0m
-[1;37;40m  2025-08-04 13:20:10      [0m
+[1;37;40m  2025-08-04 14:41:24      [0m
 [1;37;40m                           [0m
 [1;37;40m Summary:                  [0m
-[30;43m  Classes: 80.77% (21/26)  [0m
-[30;42m  Methods: 95.58% (108/113)[0m
-[30;42m  Lines:   97.63% (535/548)[0m
+[30;43m  Classes: 71.43% (20/28)  [0m
+[30;42m  Methods: 90.00% (108/120)[0m
+[30;42m  Lines:   90.55% (546/603)[0m
 
 App\Enums\TravelRequestStatusEnum
   [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% (  8/  8)[0m
@@ -44,6 +44,8 @@ App\Http\Resources\TravelRequestResource
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 18/ 18)[0m
 App\Http\Resources\UserResource
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 10/ 10)[0m
+App\Jobs\SendTravelRequestNotification
+  [37;41mMethods:  33.33% ( 1/ 3)[0m   [37;41mLines:   8.33% (  2/ 24)[0m
 App\Models\TravelRequest
   [30;42mMethods: 100.00% ( 8/ 8)[0m   [30;42mLines: 100.00% ( 20/ 20)[0m
 App\Models\User
@@ -53,10 +55,10 @@ App\Policies\TravelRequestPolicy
 App\Providers\AppServiceProvider
   [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% (  3/  3)[0m
 App\Providers\AuthServiceProvider
-  [37;41mMethods:   0.00% ( 0/ 1)[0m   [30;43mLines:  70.00% (  7/ 10)[0m
+  [37;41mMethods:   0.00% ( 0/ 1)[0m   [30;43mLines:  80.00% (  8/ 10)[0m
 App\Rules\PasswordRule
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
 App\Services\AuthService
   [30;43mMethods:  80.00% ( 4/ 5)[0m   [30;42mLines:  98.55% ( 68/ 69)[0m
 App\Services\TravelRequestService
-  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% (111/111)[0m
+  [30;43mMethods:  85.71% ( 6/ 7)[0m   [30;42mLines:  95.97% (119/124)[0m

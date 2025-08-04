@@ -17,6 +17,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class TravelRequestServiceTest extends TestCase
@@ -223,6 +224,7 @@ class TravelRequestServiceTest extends TestCase
             ->andReturn(true);
 
         Log::shouldReceive('info')->once();
+        Queue::fake();
 
         $travelRequest = TravelRequest::factory()->create(['status' => TravelRequestStatusEnum::REQUESTED]);
 
@@ -305,6 +307,7 @@ class TravelRequestServiceTest extends TestCase
             ->andReturn(true);
 
         Log::shouldReceive('info')->once();
+        Queue::fake();
 
         $travelRequest = TravelRequest::factory()->create([
             'user_id' => $user->id,
@@ -510,6 +513,7 @@ class TravelRequestServiceTest extends TestCase
             ->andReturn(true);
 
         Log::shouldReceive('info')->times(3);
+        Queue::fake();
 
         // REQUESTED -> APPROVED
         $request1 = TravelRequest::factory()->create(['status' => TravelRequestStatusEnum::REQUESTED]);
