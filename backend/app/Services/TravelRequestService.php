@@ -199,7 +199,7 @@ class TravelRequestService implements TravelRequestServiceInterface
         }
 
         // Verificar se o usuário pode cancelar o pedido usando a policy apropriada
-        if (!Gate::allows('manage-travel-request-status', $travelRequest)) {
+        if (!Gate::allows('manage-travel-request-status', $travelRequest) && !Gate::allows('own-travel-request', $travelRequest)) {
             throw new ApiValidationException(['authorization' => ['Você não tem permissão para cancelar este pedido']], 'Você não tem permissão para cancelar este pedido');
         }
 

@@ -27,3 +27,4 @@ backend//vendor
 backend/Homestead.json
 backend/Homestead.yaml
 backend/Thumbs.db
+backend/storage/coverage-html/

@@ -147,7 +147,7 @@ class TravelRequestServiceTest extends TestCase
     {
         $user1 = User::factory()->create(['role' => UserRoleEnum::USER]);
         $user2 = User::factory()->create(['role' => UserRoleEnum::USER]);
-        
+
         TravelRequest::factory()->create(['user_id' => $user1->id]);
         TravelRequest::factory()->create(['user_id' => $user2->id]);
 
@@ -342,6 +342,10 @@ class TravelRequestServiceTest extends TestCase
 
         Gate::shouldReceive('allows')
             ->with('manage-travel-request-status', \Mockery::any())
+            ->andReturn(false);
+
+        Gate::shouldReceive('allows')
+            ->with('own-travel-request', \Mockery::any())
             ->andReturn(false);
 
         $travelRequest = TravelRequest::factory()->create(['user_id' => $anotherUser->id]);
