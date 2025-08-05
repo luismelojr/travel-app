@@ -6,7 +6,6 @@ use App\Contracts\TravelRequestServiceInterface;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TravelRequest\CreateTravelRequestRequest;
-use App\Http\Requests\TravelRequest\UpdateTravelRequestRequest;
 use App\Http\Requests\TravelRequest\UpdateStatusRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -612,6 +611,66 @@ class TravelRequestController extends Controller
             }
 
             return ResponseHelper::error($e->getMessage(), 400, 'TRAVEL_REQUEST_CANCEL_ERROR');
+        }
+    }
+
+    #[OA\Get(
+        path: "/travel-requests/stats",
+        summary: "Buscar estatísticas dos pedidos de viagem",
+        description: "Retorna as estatísticas dos pedidos de viagem do usuário autenticado (total, pendentes, aprovados e cancelados)",
+        tags: ["Pedidos de Viagem"],
+        security: [["bearerAuth" => []]],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "Estatísticas obtidas com sucesso",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "success", type: "boolean", example: true),
+                        new OA\Property(property: "message", type: "string", example: "Estatísticas obtidas com sucesso"),
+                        new OA\Property(
+                            property: "data",
+                            properties: [
+                                new OA\Property(property: "total", type: "integer", example: 25),
+                                new OA\Property(property: "pending", type: "integer", example: 5),
+                                new OA\Property(property: "approved", type: "integer", example: 15),
+                                new OA\Property(property: "cancelled", type: "integer", example: 5)
+                            ],
+                            type: "object"
+                        )
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: "Não autenticado",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "success", type: "boolean", example: false),
+                        new OA\Property(property: "message", type: "string", example: "Token inválido ou expirado")
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 500,
+                description: "Erro interno do servidor",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "success", type: "boolean", example: false),
+                        new OA\Property(property: "message", type: "string", example: "Erro interno do servidor"),
+                        new OA\Property(property: "error_code", type: "string", example: "TRAVEL_REQUEST_STATS_ERROR")
+                    ]
+                )
+            )
+        ]
+    )]
+    public function stats(): JsonResponse
+    {
+        try {
+            $stats = $this->travelRequestService->getStats();
+            return ResponseHelper::success($stats, 'Estatísticas obtidas com sucesso');
+        } catch (\Exception $e) {
+            return ResponseHelper::error($e->getMessage(), 500, 'TRAVEL_REQUEST_STATS_ERROR');
         }
     }
 }

@@ -1,12 +1,12 @@
 
 
 [1;37;40mCode Coverage Report:      [0m
-[1;37;40m  2025-08-04 17:31:53      [0m
+[1;37;40m  2025-08-05 17:49:09      [0m
 [1;37;40m                           [0m
 [1;37;40m Summary:                  [0m
-[30;43m  Classes: 78.57% (22/28)  [0m
-[30;42m  Methods: 95.00% (114/120)[0m
-[30;42m  Lines:   97.18% (586/603)[0m
+[30;43m  Classes: 85.19% (23/27)  [0m
+[30;42m  Methods: 96.61% (114/118)[0m
+[30;42m  Lines:   98.49% (589/598)[0m
 
 App\Enums\TravelRequestStatusEnum
   [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% (  8/  8)[0m
@@ -21,11 +21,11 @@ App\Exceptions\AuthException
 App\Exceptions\ResourceNotFoundException
   [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% (  2/  2)[0m
 App\Helpers\ResponseHelper
-  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 42/ 42)[0m
+  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 47/ 47)[0m
 App\Http\Controllers\Api\v1\AuthController
   [30;42mMethods: 100.00% ( 6/ 6)[0m   [30;42mLines: 100.00% ( 21/ 21)[0m
 App\Http\Controllers\Api\v1\TravelRequestController
-  [30;42mMethods: 100.00% ( 6/ 6)[0m   [30;42mLines: 100.00% ( 41/ 41)[0m
+  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 45/ 45)[0m
 App\Http\Middleware\JwtAuthMiddleware
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 10/ 10)[0m
 App\Http\Requests\Auth\LoginRequest
@@ -36,8 +36,6 @@ App\Http\Requests\TravelRequest\CreateTravelRequestRequest
   [30;43mMethods:  75.00% ( 3/ 4)[0m   [30;43mLines:  88.89% ( 24/ 27)[0m
 App\Http\Requests\TravelRequest\UpdateStatusRequest
   [30;43mMethods:  75.00% ( 3/ 4)[0m   [30;43mLines:  72.73% (  8/ 11)[0m
-App\Http\Requests\TravelRequest\UpdateTravelRequestRequest
-  [30;43mMethods:  75.00% ( 3/ 4)[0m   [30;43mLines:  86.96% ( 20/ 23)[0m
 App\Http\Resources\AuthResource
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  6/  6)[0m
 App\Http\Resources\TravelRequestResource
@@ -49,7 +47,7 @@ App\Jobs\SendTravelRequestNotification
 App\Mail\TravelRequestStatusNotification
   [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 18/ 18)[0m
 App\Models\TravelRequest
-  [30;42mMethods: 100.00% ( 8/ 8)[0m   [30;42mLines: 100.00% ( 20/ 20)[0m
+  [30;42mMethods: 100.00% ( 8/ 8)[0m   [30;42mLines: 100.00% ( 17/ 17)[0m
 App\Models\User
   [30;42mMethods: 100.00% ( 3/ 3)[0m   [30;42mLines: 100.00% (  7/  7)[0m
 App\Policies\TravelRequestPolicy
@@ -63,4 +61,4 @@ App\Rules\PasswordRule
 App\Services\AuthService
   [30;43mMethods:  80.00% ( 4/ 5)[0m   [30;42mLines:  98.55% ( 68/ 69)[0m
 App\Services\TravelRequestService
-  [30;43mMethods:  85.71% ( 6/ 7)[0m   [30;42mLines:  95.97% (119/124)[0m
+  [30;42mMethods: 100.00% ( 8/ 8)[0m   [30;42mLines: 100.00% (136/136)[0m

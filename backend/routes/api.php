@@ -30,6 +30,9 @@ Route::prefix('v1')->group(function () {
 
     // Travel Request Routes - Todas autenticadas
     Route::middleware(['jwt.auth', 'throttle:60,1'])->prefix('travel-requests')->group(function () {
+        // Estatísticas - deve vir antes das rotas com parâmetros
+        Route::get('/stats', [TravelRequestController::class, 'stats']);
+        
         // Rotas básicas disponíveis para todos os usuários autenticados
         Route::post('/', [TravelRequestController::class, 'store']);
         Route::get('/', [TravelRequestController::class, 'index']);

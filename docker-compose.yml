@@ -59,16 +59,40 @@ services:
     networks:
       - travel-network
 
+  queue:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: travel-queue
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/storage:/var/www/html/storage
+      - ./backend/vendor:/var/www/html/vendor
+    networks:
+      - travel-network
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+      - MAIL_HOST=mailhog
+    command: php artisan queue:work --verbose --tries=3 --timeout=90
+
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: travel-frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     networks:
       - travel-network
     depends_on:

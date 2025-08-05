@@ -516,7 +516,7 @@ class TravelRequestServiceTest extends TestCase
             ->with('manage-travel-request-status')
             ->andReturn(true);
 
-        Log::shouldReceive('info')->times(3);
+        Log::shouldReceive('info')->times(2);
         Queue::fake();
 
         // REQUESTED -> APPROVED
@@ -529,9 +529,113 @@ class TravelRequestServiceTest extends TestCase
         $result2 = $this->travelRequestService->updateStatus($request2->id, 'cancelled');
         $this->assertInstanceOf(TravelRequestResource::class, $result2);
 
-        // APPROVED -> CANCELLED
-        $request3 = TravelRequest::factory()->create(['status' => TravelRequestStatusEnum::APPROVED]);
-        $result3 = $this->travelRequestService->updateStatus($request3->id, 'cancelled');
-        $this->assertInstanceOf(TravelRequestResource::class, $result3);
+    }
+
+    public function test_update_status_throws_exception_when_trying_to_change_approved_status(): void
+    {
+        $admin = User::factory()->create(['role' => UserRoleEnum::ADMIN]);
+        $this->actingAs($admin, 'api');
+
+        Gate::shouldReceive('allows')
+            ->with('manage-travel-request-status')
+            ->andReturn(true);
+
+        $approvedRequest = TravelRequest::factory()->create(['status' => TravelRequestStatusEnum::APPROVED]);
+
+        $this->expectException(ApiValidationException::class);
+        $this->expectExceptionMessage('Transição inválida: Pedido já aprovado não pode ser modificado');
+
+        $this->travelRequestService->updateStatus($approvedRequest->id, 'cancelled');
+    }
+
+    public function test_update_status_throws_exception_when_trying_to_change_approved_to_requested(): void
+    {
+        $admin = User::factory()->create(['role' => UserRoleEnum::ADMIN]);
+        $this->actingAs($admin, 'api');
+
+        Gate::shouldReceive('allows')
+            ->with('manage-travel-request-status')
+            ->andReturn(true);
+
+        $approvedRequest = TravelRequest::factory()->create(['status' => TravelRequestStatusEnum::APPROVED]);
+
+        $this->expectException(ApiValidationException::class);
+        $this->expectExceptionMessage('Transição inválida: Pedido já aprovado não pode ser modificado');
+
+        $this->travelRequestService->updateStatus($approvedRequest->id, 'requested');
+    }
+
+    public function test_get_stats_returns_correct_statistics_for_regular_user(): void
+    {
+        $user = User::factory()->create(['role' => UserRoleEnum::USER]);
+        $this->actingAs($user, 'api');
+
+        // Criar pedidos para o usuário atual
+        TravelRequest::factory()->count(3)->create([
+            'user_id' => $user->id,
+            'status' => TravelRequestStatusEnum::REQUESTED
+        ]);
+        TravelRequest::factory()->count(2)->create([
+            'user_id' => $user->id,
+            'status' => TravelRequestStatusEnum::APPROVED
+        ]);
+        TravelRequest::factory()->count(1)->create([
+            'user_id' => $user->id,
+            'status' => TravelRequestStatusEnum::CANCELLED
+        ]);
+
+        // Criar pedidos para outro usuário (não devem aparecer nas estatísticas)
+        $otherUser = User::factory()->create(['role' => UserRoleEnum::USER]);
+        TravelRequest::factory()->count(5)->create(['user_id' => $otherUser->id]);
+
+        $stats = $this->travelRequestService->getStats();
+
+        $this->assertEquals(6, $stats['total']);
+        $this->assertEquals(3, $stats['pending']);
+        $this->assertEquals(2, $stats['approved']);
+        $this->assertEquals(1, $stats['cancelled']);
+    }
+
+    public function test_get_stats_returns_all_statistics_for_admin(): void
+    {
+        $admin = User::factory()->create(['role' => UserRoleEnum::ADMIN]);
+        $this->actingAs($admin, 'api');
+
+        $user1 = User::factory()->create(['role' => UserRoleEnum::USER]);
+        $user2 = User::factory()->create(['role' => UserRoleEnum::USER]);
+
+        // Criar pedidos para diferentes usuários
+        TravelRequest::factory()->count(3)->create([
+            'user_id' => $user1->id,
+            'status' => TravelRequestStatusEnum::REQUESTED
+        ]);
+        TravelRequest::factory()->count(2)->create([
+            'user_id' => $user2->id,
+            'status' => TravelRequestStatusEnum::APPROVED
+        ]);
+        TravelRequest::factory()->count(1)->create([
+            'user_id' => $admin->id,
+            'status' => TravelRequestStatusEnum::CANCELLED
+        ]);
+
+        $stats = $this->travelRequestService->getStats();
+
+        $this->assertEquals(6, $stats['total']);
+        $this->assertEquals(3, $stats['pending']);
+        $this->assertEquals(2, $stats['approved']);
+        $this->assertEquals(1, $stats['cancelled']);
+    }
+
+    public function test_get_stats_returns_zero_when_no_requests_exist(): void
+    {
+        $user = User::factory()->create(['role' => UserRoleEnum::USER]);
+        $this->actingAs($user, 'api');
+
+        $stats = $this->travelRequestService->getStats();
+
+        $this->assertEquals(0, $stats['total']);
+        $this->assertEquals(0, $stats['pending']);
+        $this->assertEquals(0, $stats['approved']);
+        $this->assertEquals(0, $stats['cancelled']);
     }
 }

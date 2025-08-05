@@ -277,19 +277,18 @@ class TravelRequestService implements TravelRequestServiceInterface
                 TravelRequestStatusEnum::APPROVED->value,
                 TravelRequestStatusEnum::CANCELLED->value,
             ],
-            TravelRequestStatusEnum::APPROVED->value => [
-                TravelRequestStatusEnum::CANCELLED->value,
-            ],
+            // Approved is final state - cannot be changed to any other status
+            TravelRequestStatusEnum::APPROVED->value => [],
             // Cancelled is final state
             TravelRequestStatusEnum::CANCELLED->value => [],
         ];
 
-        if ($currentStatus === TravelRequestStatusEnum::APPROVED && $newStatus !== TravelRequestStatusEnum::CANCELLED) {
+        if ($currentStatus === TravelRequestStatusEnum::APPROVED) {
             throw new ApiValidationException([
                 'status' => [
-                    'Pedidos aprovados só podem ser cancelados, não podem ser reprovados ou alterados para outro status'
+                    'Pedidos aprovados não podem ser alterados para nenhum outro status'
                 ],
-            ], 'Transição inválida: Pedido já aprovado');
+            ], 'Transição inválida: Pedido já aprovado não pode ser modificado');
         }
 
         if (!in_array($newStatus->value, $allowedTransitions[$currentStatus->value])) {
@@ -307,5 +306,35 @@ class TravelRequestService implements TravelRequestServiceInterface
                 $newStatus->label()
             ));
         }
+    }
+
+    /**
+     * Retorna estatísticas dos pedidos de viagem do usuário
+     *
+     * @return array Estatísticas dos pedidos de viagem
+     */
+    public function getStats(): array
+    {
+        $user = auth('api')->user();
+        $query = TravelRequest::query();
+
+        // Aplicar filtro de usuário baseado no papel:
+        // - Usuários regulares: apenas seus próprios pedidos
+        // - Administradores: todos os pedidos
+        if ($user->role !== UserRoleEnum::ADMIN) {
+            $query->where('user_id', $user->id);
+        }
+
+        $total = $query->count();
+        $pending = $query->clone()->where('status', TravelRequestStatusEnum::REQUESTED)->count();
+        $approved = $query->clone()->where('status', TravelRequestStatusEnum::APPROVED)->count();
+        $cancelled = $query->clone()->where('status', TravelRequestStatusEnum::CANCELLED)->count();
+
+        return [
+            'total' => $total,
+            'pending' => $pending,
+            'approved' => $approved,
+            'cancelled' => $cancelled,
+        ];
     }
 }

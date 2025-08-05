@@ -132,9 +132,9 @@ class TravelRequestTest extends TestCase
     {
         $endDate = Carbon::parse('2024-01-25');
 
-        TravelRequest::factory()->create(['return_date' => '2024-01-20']);
-        TravelRequest::factory()->create(['return_date' => '2024-01-30']);
-        TravelRequest::factory()->create(['return_date' => '2024-02-10']);
+        TravelRequest::factory()->create(['departure_date' => '2024-01-20']);
+        TravelRequest::factory()->create(['departure_date' => '2024-01-30']);
+        TravelRequest::factory()->create(['departure_date' => '2024-02-10']);
 
         $filteredRequests = TravelRequest::byDateRange(null, $endDate)->get();
 

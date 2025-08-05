@@ -193,6 +193,22 @@ class TravelRequestControllerTest extends TestCase
 
         $collection = Mockery::mock(AnonymousResourceCollection::class);
         $collection->shouldReceive('jsonSerialize')->andReturn([]);
+        
+        // Mock do response() para AnonymousResourceCollection
+        $mockResponse = Mockery::mock();
+        $mockResponse->shouldReceive('getData')
+            ->with(true)
+            ->andReturn([
+                'data' => [],
+                'current_page' => 1,
+                'per_page' => 15,
+                'total' => 0,
+                'last_page' => 1,
+                'from' => null,
+                'to' => null,
+                'links' => []
+            ]);
+        $collection->shouldReceive('response')->andReturn($mockResponse);
 
         $this->travelRequestService
             ->shouldReceive('list')
@@ -497,5 +513,48 @@ class TravelRequestControllerTest extends TestCase
 
         $this->assertTrue($data['success']);
         $this->assertEquals('Pedido de viagem cancelado com sucesso', $data['message']);
+    }
+
+    public function test_stats_returns_statistics_successfully(): void
+    {
+        $expectedStats = [
+            'total' => 25,
+            'pending' => 5,
+            'approved' => 15,
+            'cancelled' => 5
+        ];
+
+        $this->travelRequestService
+            ->shouldReceive('getStats')
+            ->once()
+            ->andReturn($expectedStats);
+
+        $response = $this->controller->stats();
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $data = $response->getData(true);
+        $this->assertTrue($data['success']);
+        $this->assertEquals('Estatísticas obtidas com sucesso', $data['message']);
+        $this->assertEquals($expectedStats, $data['data']);
+    }
+
+    public function test_stats_handles_service_exception(): void
+    {
+        $this->travelRequestService
+            ->shouldReceive('getStats')
+            ->once()
+            ->andThrow(new \Exception('Stats error'));
+
+        $response = $this->controller->stats();
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(500, $response->getStatusCode());
+
+        $data = $response->getData(true);
+        $this->assertFalse($data['success']);
+        $this->assertEquals('Stats error', $data['message']);
+        $this->assertEquals('TRAVEL_REQUEST_STATS_ERROR', $data['error_code']);
     }
 }

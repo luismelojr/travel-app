@@ -8,6 +8,15 @@ class ResponseHelper
 {
     public static function success(mixed $data = null, string $message = 'Success', int $statusCode = 200): JsonResponse
     {
+        // Se for uma AnonymousResourceCollection (paginada), preservar a estrutura
+        if ($data instanceof \Illuminate\Http\Resources\Json\AnonymousResourceCollection) {
+            $paginatedData = $data->response()->getData(true);
+            $paginatedData['success'] = true;
+            $paginatedData['message'] = $message;
+            
+            return response()->json($paginatedData, $statusCode);
+        }
+
         return response()->json([
             'success' => true,
             'message' => $message,

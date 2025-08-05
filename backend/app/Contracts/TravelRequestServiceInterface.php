@@ -54,4 +54,11 @@ interface TravelRequestServiceInterface
      * @throws \App\Exceptions\ApiValidationException
      */
     public function cancel(int $id): TravelRequestResource;
+
+    /**
+     * Retorna estatísticas dos pedidos de viagem do usuário
+     *
+     * @return array Estatísticas dos pedidos de viagem
+     */
+    public function getStats(): array;
 }

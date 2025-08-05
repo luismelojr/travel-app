@@ -1706,6 +1706,108 @@
                     }
                 ]
             }
+        },
+        "/travel-requests/stats": {
+            "get": {
+                "tags": [
+                    "Pedidos de Viagem"
+                ],
+                "summary": "Buscar estatísticas dos pedidos de viagem",
+                "description": "Retorna as estatísticas dos pedidos de viagem do usuário autenticado (total, pendentes, aprovados e cancelados)",
+                "operationId": "1abdbd66273629b2285832f77f80fe2b",
+                "responses": {
+                    "200": {
+                        "description": "Estatísticas obtidas com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Estatísticas obtidas com sucesso"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 25
+                                                },
+                                                "pending": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "approved": {
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "cancelled": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Token inválido ou expirado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro interno do servidor"
+                                        },
+                                        "error_code": {
+                                            "type": "string",
+                                            "example": "TRAVEL_REQUEST_STATS_ERROR"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {

@@ -10,8 +10,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     nodejs \
-    npm \
-    supervisor
+    npm
 
 # Limpar cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -33,8 +32,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
-# Copiar configuração do supervisor
-COPY supervisor.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Definir diretório de trabalho
 WORKDIR /var/www/html
@@ -46,4 +43,4 @@ RUN chown -R www:www /var/www/html
 EXPOSE 8000
 
 # Comando padrão
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

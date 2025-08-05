@@ -47,13 +47,12 @@ class TravelRequest extends Model
 
     public function scopeByDateRange(Builder $query, ?Carbon $startDate = null, ?Carbon $endDate = null): Builder
     {
-        if ($startDate && $endDate) {
-            $query->where('departure_date', '>=', $startDate)
-                  ->where('return_date', '<=', $endDate);
-        } elseif ($startDate) {
+        if ($startDate) {
             $query->where('departure_date', '>=', $startDate);
-        } elseif ($endDate) {
-            $query->where('return_date', '<=', $endDate);
+        }
+        
+        if ($endDate) {
+            $query->where('departure_date', '<=', $endDate);
         }
         
         return $query;

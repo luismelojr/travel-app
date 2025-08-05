@@ -1,17 +1,41 @@
-# Travel API - Sistema de Gerenciamento de Pedidos de Viagem
+# 🚀 Travel App - Sistema Completo de Gerenciamento de Viagens
 
-API REST completa para gerenciamento de pedidos de viagem corporativa desenvolvida com Laravel 12, autenticação JWT, documentação Swagger e cobertura de testes de 90%+.
+Sistema completo de gerenciamento de pedidos de viagem corporativa com **backend Laravel** e **frontend Vue.js**, incluindo painel administrativo, autenticação JWT, notificações por email e interface moderna e responsiva.
 
-## 🚀 Features Principais
+## ✨ Features Principais
 
-- ✅ **Autenticação JWT** - Sistema completo de login/registro com tokens seguros
-- ✅ **CRUD Pedidos de Viagem** - Criar, listar, visualizar e gerenciar pedidos
-- ✅ **Sistema de Autorização** - Roles (admin/user) com permissões específicas
-- ✅ **Notificações por Email** - Notificação automática de status via filas
+### 🔐 Autenticação & Autorização
+
+- ✅ **Sistema JWT Completo** - Login/registro seguro com tokens
+- ✅ **Roles & Permissions** - Admin e usuários com permissões específicas
+- ✅ **Middleware de Segurança** - Proteção de rotas e recursos
+
+### 📱 Frontend Moderno
+
+- ✅ **Interface Vue.js 3** - SPA moderna e responsiva
+- ✅ **Design System** - PrimeVue com tema customizado
+- ✅ **Painel Admin** - Gerenciamento completo para administradores
+- ✅ **Dashboard Interativo** - Estatísticas e visões gerais
+
+### 🎯 Gerenciamento de Viagens
+
+- ✅ **CRUD Completo** - Criar, listar, visualizar e gerenciar pedidos
+- ✅ **Sistema de Status** - Solicitado, Aprovado, Cancelado
+- ✅ **Filtros Avançados** - Por status, destino, data, solicitante
+- ✅ **Aprovação Admin** - Admins podem alterar status das solicitações
+
+### 🔔 Notificações & Comunicação
+
+- ✅ **Emails Automáticos** - Notificação de mudanças via filas
+- ✅ **Templates Responsivos** - Emails HTML bem formatados
+- ✅ **Processamento Assíncrono** - Jobs em background com Redis
+
+### 🧪 Qualidade & Documentação
+
+- ✅ **Testes 90%+** - Cobertura completa com PHPUnit
 - ✅ **Documentação Swagger** - API totalmente documentada
-- ✅ **Testes Completos** - 90%+ de cobertura com PHPUnit
-- ✅ **Rate Limiting** - Proteção contra spam e ataques
-- ✅ **Docker Ready** - Ambiente completo containerizado
+- ✅ **Dados Demo** - Usuários e solicitações para teste
+- ✅ **Docker Completo** - Ambiente containerizado
 
 ## 🚀 Quick Start
 
@@ -27,13 +51,44 @@ sudo chmod +x setup.sh restart.sh
 
 ## 📱 URLs Disponíveis
 
-| Serviço     | URL                                     | Descrição                      |
-| ----------- | --------------------------------------- | ------------------------------ |
-| **API**     | http://localhost:8000                   | API Laravel principal          |
-| **Swagger** | http://localhost:8000/api/documentation | Documentação interativa da API |
-| **Mailhog** | http://localhost:8025                   | Interface para testes de email |
+| Serviço      | URL                                     | Descrição                      |
+| ------------ | --------------------------------------- | ------------------------------ |
+| **Frontend** | http://localhost:3000                   | Interface Vue.js (SPA)         |
+| **Backend**  | http://localhost:8000                   | API Laravel                    |
+| **Swagger**  | http://localhost:8000/api/documentation | Documentação interativa da API |
+| **Mailhog**  | http://localhost:8025                   | Interface para testes de email |
+
+## 🔐 Credenciais de Demonstração
+
+O sistema cria automaticamente usuários para teste:
+
+| Perfil      | Email            | Senha    | Permissões                               |
+| ----------- | ---------------- | -------- | ---------------------------------------- |
+| **Admin**   | admin@travel.com | admin123 | Gerenciar todas as solicitações e status |
+| **Usuário** | user@travel.com  | user123  | Criar e gerenciar próprias solicitações  |
+| **Usuário** | joao@travel.com  | password | Criar e gerenciar próprias solicitações  |
+| **Usuário** | maria@travel.com | password | Criar e gerenciar próprias solicitações  |
+
+### 🎯 Como Testar as Funcionalidades Admin
+
+1. **Acesse:** http://localhost:3000
+2. **Login Admin:** `admin@travel.com` / `admin123`
+3. **Funcionalidades disponíveis:**
+   - Ver **todas** as solicitações (não apenas próprias)
+   - **Atualizar status** das solicitações (aprovar/cancelar)
+   - **Filtrar** e **pesquisar** solicitações
+   - **Dashboard** com estatísticas gerais
 
 ## 🧱 Stack Tecnológica
+
+### Frontend
+
+- **Vue.js 3** - Framework JavaScript reativo
+- **TypeScript** - Tipagem estática para JavaScript
+- **Vite** - Build tool moderna e rápida
+- **PrimeVue** - Biblioteca de componentes UI
+- **Vue Router** - Roteamento SPA
+- **Axios** - Cliente HTTP para APIs
 
 ### Backend
 
@@ -47,31 +102,50 @@ sudo chmod +x setup.sh restart.sh
 
 ### DevOps
 
-- **Docker & Docker Compose** - Ambiente containerizado
+- **Docker & Docker Compose** - Ambiente containerizado completo
+- **Nginx** - Servidor web para frontend
 - **Xdebug** - Debug e cobertura de código
-- **Supervisor** - Gerenciamento de workers de fila
 
 ## 🏗️ Arquitetura
 
-O projeto segue padrões de **Clean Code** e **SOLID**:
+O projeto segue padrões de **Clean Code** e **SOLID** com separação clara entre frontend e backend:
+
+### 🎨 Estrutura Frontend
 
 ```
-app/
-├── Contracts/           # Interfaces dos serviços
-├── Enums/              # Enums para status e roles
-├── Exceptions/         # Exceções customizadas
-├── Helpers/            # Helpers para responses
+frontend/
+├── src/
+│   ├── components/     # Componentes reutilizáveis
+│   ├── composables/    # Lógica reativa compartilhada
+│   ├── layouts/        # Templates de layout
+│   ├── pages/          # Páginas/Views da aplicação
+│   ├── router/         # Configuração de rotas
+│   ├── services/       # Serviços de API (HTTP)
+│   ├── types/          # Tipos TypeScript
+│   └── utils/          # Utilitários e helpers
+├── public/             # Assets estáticos
+└── dist/               # Build de produção
+```
+
+### ⚙️ Estrutura Backend
+
+```
+backend/app/
+├── Contracts/          # Interfaces dos serviços
+├── Enums/             # Enums para status e roles
+├── Exceptions/        # Exceções customizadas
+├── Helpers/           # Helpers para responses
 ├── Http/
-│   ├── Controllers/    # Controllers da API v1
-│   ├── Middleware/     # JWT e outros middlewares
-│   ├── Requests/       # Form Requests com validação
-│   └── Resources/      # API Resources (transformação)
-├── Jobs/               # Jobs assíncronos (emails)
-├── Mail/               # Classes de email
-├── Models/             # Eloquent Models
-├── Policies/           # Authorization policies
-├── Rules/              # Custom validation rules
-└── Services/           # Lógica de negócio
+│   ├── Controllers/   # Controllers da API v1
+│   ├── Middleware/    # JWT e outros middlewares
+│   ├── Requests/      # Form Requests com validação
+│   └── Resources/     # API Resources (transformação)
+├── Jobs/              # Jobs assíncronos (emails)
+├── Mail/              # Classes de email
+├── Models/            # Eloquent Models
+├── Policies/          # Authorization policies
+├── Rules/             # Custom validation rules
+└── Services/          # Lógica de negócio
 ```
 
 ## 📝 Endpoints da API
@@ -93,8 +167,18 @@ app/
 | `POST`  | `/`            | Criar pedido             | ✅   | Qualquer                      |
 | `GET`   | `/`            | Listar pedidos           | ✅   | User: próprios / Admin: todos |
 | `GET`   | `/{id}`        | Buscar pedido específico | ✅   | User: próprios / Admin: todos |
-| `PATCH` | `/{id}/status` | Alterar status           | ✅   | Admin apenas                  |
+| `GET`   | `/stats`       | Estatísticas de pedidos  | ✅   | Qualquer                      |
+| `PATCH` | `/{id}/status` | Alterar status           | ✅   | **Admin apenas**              |
 | `PATCH` | `/{id}/cancel` | Cancelar pedido          | ✅   | Owner ou Admin                |
+
+### 🎯 Funcionalidades Admin (Destaque)
+
+O sistema possui funcionalidades específicas para administradores:
+
+- **Visualizar todas as solicitações** (não apenas próprias)
+- **Atualizar status** das solicitações (aprovado/cancelado/solicitado)
+- **Dashboard administrativo** com visão geral do sistema
+- **Gerenciamento completo** de pedidos de outros usuários
 
 ### Rate Limiting
 
@@ -146,6 +230,9 @@ docker-compose logs app -f
 # Migrations
 docker-compose exec app php artisan migrate
 
+# Executar seeders (criar dados demo)
+docker-compose exec app php artisan db:seed
+
 # Gerar documentação Swagger
 docker-compose exec app php artisan l5-swagger:generate
 
@@ -154,6 +241,22 @@ docker-compose exec app php artisan queue:work
 
 # Limpar caches
 docker-compose exec app php artisan optimize:clear
+```
+
+### Frontend
+
+```bash
+# Instalar dependências
+cd frontend && npm install
+
+# Desenvolvimento
+cd frontend && npm run dev
+
+# Build para produção
+cd frontend && npm run build
+
+# Preview da build
+cd frontend && npm run preview
 ```
 
 ## 📊 Configuração do Ambiente
@@ -200,35 +303,48 @@ MAIL_PORT=1025
 
 ## 🔧 Funcionalidades Implementadas
 
-### Sistema de Autenticação
+### 🎨 Frontend (Vue.js)
 
-- Registro de usuários com validação robusta
-- Login com credenciais email/senha
-- Tokens JWT com expiração configurável
-- Refresh de tokens
-- Middleware de autenticação customizado
+- **Interface Responsiva** - Design adaptativo para desktop e mobile
+- **Autenticação JWT** - Login/logout com persistência de sessão
+- **Dashboard Interativo** - Estatísticas e gráficos em tempo real
+- **CRUD de Viagens** - Criar, editar, visualizar e gerenciar pedidos
+- **Painel Admin** - Interface específica para administradores
+- **Filtros Avançados** - Busca por status, destino, datas
+- **Notificações Toast** - Feedback visual para ações do usuário
+- **Estados de Loading** - Skeletons e spinners para melhor UX
 
-### Gerenciamento de Pedidos
+### ⚙️ Backend (Laravel)
 
-- Criação de pedidos com validação de datas
-- Listagem com filtros (status, destino, datas)
-- Visualização de pedidos individuais
-- Sistema de autorização baseado em roles
-- Cancelamento de pedidos com regras de negócio
+- **API RESTful** - Endpoints bem estruturados e documentados
+- **Autenticação JWT** - Sistema seguro de tokens
+- **Autorização RBAC** - Roles e permissões (admin/user)
+- **Validação Robusta** - Form Requests com regras customizadas
+- **Sistema de Notificações** - Emails automáticos via filas
+- **Tratamento de Erros** - Exceções customizadas e responses padronizados
+- **Rate Limiting** - Proteção contra spam e ataques
+- **Cache Redis** - Otimização de performance
 
-### Sistema de Notificações
+### 🔔 Sistema de Notificações
 
-- Emails automáticos via filas Redis
-- Notificação de mudanças de status
-- Templates HTML responsivos
-- Processamento assíncrono via Jobs
+- **Emails Automáticos** - Notificação de mudanças de status
+- **Templates Responsivos** - HTML bem formatados para todos os dispositivos
+- **Processamento Assíncrono** - Jobs em background com Redis
+- **Mailhog Integration** - Testes de email em desenvolvimento
 
-### Documentação e Testes
+### 📊 Dados e Relatórios
 
-- Swagger/OpenAPI 3.0 completo
-- Testes unitários e de integração
-- Cobertura de código com relatórios HTML
-- Factories e Seeders para desenvolvimento
+- **Seeders Inteligentes** - Dados realistas para demonstração
+- **Estatísticas** - Dashboard com métricas de pedidos
+- **Filtros Complexos** - Busca por múltiplos critérios
+- **Paginação** - Listagens otimizadas para grandes volumes
+
+### 🧪 Qualidade e Testes
+
+- **Testes Automatizados** - 90%+ de cobertura com PHPUnit
+- **Documentação Swagger** - API totalmente documentada
+- **Docker Completo** - Ambiente isolado e reproduzível
+- **CI/CD Ready** - Estrutura preparada para integração contínua
 
 ## 🚨 Troubleshooting
 
@@ -268,9 +384,9 @@ docker system prune -f
 - **Docker** 20.10+
 - **Docker Compose** 2.0+
 - **Git**
-- **PHP 8.2+** (se executar fora do Docker)
+- **Node.js 18+** (se executar frontend fora do Docker)
+- **PHP 8.2+** (se executar backend fora do Docker)
 
----
+## 🤝 Contribuições
 
-**API desenvolvida seguindo as melhores práticas de segurança, teste e documentação** 🚀
-**Desenvolvido por [Luis Henrique](https://www.linkedin.com/in/luis-henrique-da-silva-melo-junior-416579155/)** 🛠️
+**Desenvolvido por [Luis Henrique](https://www.linkedin.com/in/luis-henrique-da-silva-melo-junior-416579155/)** 👨‍💻
